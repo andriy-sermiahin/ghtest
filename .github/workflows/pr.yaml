@@ -27,7 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: |
-          PREV_VERSION=jq '.dependencies | to_entries | map(select(.key == "moment")) | .[0].value' package.json | tr -d '"'
+          PREV_VERSION=$(jq '.dependencies | to_entries | map(select(.key == "moment")) | .[0].value' package.json | tr -d '"')
           echo $PREV_VERSION
           echo "PREV_VERSION=$(echo $PREV_VERSION)" >> $GITHUB_ENV
 
@@ -47,5 +47,6 @@ jobs:
           git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
           git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
           git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
+        if: $IS_UPDATED === "1"
 
       
