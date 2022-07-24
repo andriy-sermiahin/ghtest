@@ -3,7 +3,7 @@ name: Node CI environment
 on: [push]
 
 jobs:
-  lint:
+  update-deps:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -14,8 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
-        package: [moment]
+        package: [moment, dotenv]
 
     outputs:
       PACKAGE_INFO_VERSION: ${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
@@ -25,10 +24,10 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 16
 
       - run: |
           PREV_VERSION=$(jq '.dependencies | to_entries | map(select(.key == "${{ matrix.package }}")) | .[0].value' package.json | tr -d '"')
@@ -56,9 +55,9 @@ jobs:
           git checkout -b "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
           git add . && git commit -m "Upgrade ${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
           git push origin "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
-          # gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
 
-      - run: |
+      - if: env.IS_UPDATED == 1
+        run: |
           gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
         
 
