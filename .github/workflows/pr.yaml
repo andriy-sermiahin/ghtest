@@ -49,6 +49,7 @@ jobs:
           git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global github.token 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
+          echo "GH_TOKEN=$(echo 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)" >> $GITHUB_ENV
           git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
           git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
           git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
