@@ -1,0 +1,22 @@
+{
+  "name": "ghtest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andriy-sermiahin/ghtest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andriy-sermiahin/ghtest/issues"
+  },
+  "homepage": "https://github.com/andriy-sermiahin/ghtest#readme",
+  "dependencies": {
+    "moment": "2.29.0"
+  }
+}
