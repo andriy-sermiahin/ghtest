@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
+        package: [moment]
 
     outputs:
       PACKAGE_INFO_VERSION: ${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
@@ -30,17 +31,17 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: |
-          PREV_VERSION=$(jq '.dependencies | to_entries | map(select(.key == "moment")) | .[0].value' package.json | tr -d '"')
+          PREV_VERSION=$(jq '.dependencies | to_entries | map(select(.key == "${{ matrix.package }}")) | .[0].value' package.json | tr -d '"')
           echo $PREV_VERSION
           echo "PREV_VERSION=$(echo $PREV_VERSION)" >> $GITHUB_ENV
 
       - run: |
-          VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
+          VERSION=$(yarn info ${{ matrix.package }} | grep "version:" | cut -d \' -f2)
           echo $VERSION
           echo "PACKAGE_INFO_VERSION=$(echo $VERSION)" >> $GITHUB_ENV
 
-      - name: Upgrading moment
-        run: yarn upgrade moment@$PACKAGE_INFO_VERSION
+      - name: Upgrading package
+        run: yarn upgrade ${{ matrix.package }}@$PACKAGE_INFO_VERSION
 
       - name: Get diff
         run: |
@@ -54,15 +55,15 @@ jobs:
           git config --global github.token $GH_TOKEN
           # echo "GH_TOKEN=$(echo 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)" >> $GITHUB_ENV
           # GH_TOKEN=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
-          # git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
-          # git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
-          # git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
+          # git checkout -b "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
+          # git add . && git commit -m "${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+          # git push origin "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
           git remote -v
           gh pr diff
-          # gh pr create --base main --title "Deps: moment upgrade to v$PACKAGE_INFO_VERSION" --body "moment has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+          # gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
 
       # - run: |
-      #     gh pr create --base main --title "Deps: moment upgrade to v$PACKAGE_INFO_VERSION" --body "moment has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+      #     gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
         
 
       
