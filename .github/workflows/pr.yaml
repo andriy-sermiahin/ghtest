@@ -13,6 +13,9 @@ jobs:
       matrix:
         node-version: [14.x]
 
+    outputs:
+      PACKAGE_INFO_VERSION: ${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -25,13 +28,16 @@ jobs:
 
       - run: |
           PACKAGE_INFO_VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
-          echo $PACKAGE_INFO_VERSION && echo ::set-output name=PACKAGE_INFO_VERSION::"$PACKAGE_INFO_VERSION"
+          echo $PACKAGE_INFO_VERSION
+          echo "::set-output name=PACKAGE_INFO_VERSION::$PACKAGE_INFO_VERSION"
 
       - name: Upgrading moment
-        run: yarn upgrade moment@${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
+        run: yarn upgrade moment@${{needs.job1.outputs.PACKAGE_INFO_VERSION}}
+        # with:
+        #   PACKAGE_INFO_VERSION: ${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
 
       - name: Get diff
-        run: git diff --name-only package.json
+        run: git diff --name-only --exit-code package.json
 
       # - name: Get diff
       #   run: |
