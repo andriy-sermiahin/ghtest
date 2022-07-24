@@ -48,9 +48,9 @@ jobs:
 
       - if: env.IS_UPDATED == 1
         run: |
-          git config --global user.name "AndriiSermiahin"
-          git config --global user.email "andrey.sermiahin@gmail.com"
-          git config --global user.email "andrey.sermiahin@gmail.com"
+          #git config --global user.name "AndriiSermiahin"
+          #git config --global user.email "andrey.sermiahin@gmail.com"
+          #git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global github.token $GH_TOKEN
           git checkout -b "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
           git add . && git commit -m "Upgrade ${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
