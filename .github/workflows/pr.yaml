@@ -2,7 +2,7 @@ name: Shelf packages upgrade
 
 on:
   schedule:
-    - cron: '0 12 * * SUN'
+    #- cron: '0 12 * * SUN'
 
 jobs:
   update-deps:
@@ -27,6 +27,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
 
       - name: Getting current package version from package.json
         run: |
