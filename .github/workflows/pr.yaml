@@ -31,7 +31,7 @@ jobs:
         run: yarn upgrade moment@${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
 
       - name: Get diff
-        run: git diff --name-only --exit-code package.json | grep "moment"
+        run: git diff --name-only package.json
 
       # - name: Get diff
       #   run: |
