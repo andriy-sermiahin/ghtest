@@ -43,7 +43,7 @@ jobs:
         run: |
             git diff --name-only --exit-code package.json || echo "IS_UPDATED=$(echo $?)" >> $GITHUB_ENV && exit 0
 
-      - if: env.IS_UPDATED == "1"
+      - if: env.IS_UPDATED == 1
         run: |
           git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
           git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
