@@ -27,15 +27,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: |
-          PACKAGE_INFO_VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
-          echo $PACKAGE_INFO_VERSION
-          echo ::set-output name=PACKAGE_INFO_VERSION::"2.29.3"
-          echo ${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
+          VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
+          echo $VERSION
+          echo "PACKAGE_INFO_VERSION=$PACKAGE_INFO_VERSION" >> $GITHUB_ENV
 
       - name: Upgrading moment
-        run: yarn upgrade moment@${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
-        # with:
-        #   PACKAGE_INFO_VERSION: ${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
+        run: yarn upgrade moment@$PACKAGE_INFO_VERSION
+        with:
+          PACKAGE_INFO_VERSION: ${{ env.PACKAGE_INFO_VERSION }}
 
       - name: Get diff
         run: git diff --name-only --exit-code package.json
