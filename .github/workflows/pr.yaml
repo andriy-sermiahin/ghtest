@@ -31,12 +31,15 @@ jobs:
         run: yarn upgrade moment@${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
 
       - name: Get diff
-        run: |
-            git diff --name-only --exit-code package.json | grep "moment"
-            IS_UPDATED=$?
-            echo "IS_UPDATED = $IS_UPDATED" && echo ::set-output name=IS_UPDATED::"$IS_UPDATED"
+        run: git diff --name-only --exit-code package.json | grep "moment"
+
+      # - name: Get diff
+      #   run: |
+      #       git diff --name-only --exit-code package.json | grep "moment"
+      #       IS_UPDATED=$?
+      #       echo "IS_UPDATED = $IS_UPDATED" && echo ::set-output name=IS_UPDATED::"$IS_UPDATED"
 
 
-      - run: echo ${{ steps.vars.outputs.IS_UPDATED }}
+      # - run: echo ${{ steps.vars.outputs.IS_UPDATED }}
 
       
