@@ -26,6 +26,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - run: git status
+
       - run: |
           PACKAGE_INFO_VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
           echo $PACKAGE_INFO_VERSION
