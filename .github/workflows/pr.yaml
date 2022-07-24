@@ -29,8 +29,8 @@ jobs:
       - run: |
           PACKAGE_INFO_VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
           echo $PACKAGE_INFO_VERSION
-          echo "::set-output name=PACKAGE_INFO_VERSION::2.29.3"
-          echo ${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
+          echo ::set-output name=PACKAGE_INFO_VERSION::"2.29.3"
+          echo ${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
 
       - name: Upgrading moment
         run: yarn upgrade moment@${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
