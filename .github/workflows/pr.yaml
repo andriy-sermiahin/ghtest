@@ -1,0 +1,37 @@
+name: Node CI environment
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: |
+          PACKAGE_INFO_VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
+          echo $PACKAGE_INFO_VERSION
+
+      - name: Upgrading moment
+        run: yarn upgrade moment@$PACKAGE_INFO_VERSION
+
+      - name: Get diff
+        run: git diff --name-only --exit-code package.json | grep "eslint"
+
+      - run: IS_UPDATED=$?
+
+      - run: echo "IS_UPDATED = $IS_UPDATED"
+
+      
