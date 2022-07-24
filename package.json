@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/andriy-sermiahin/ghtest#readme",
   "dependencies": {
-    "dotenv": "15",
+    "dotenv": "16.0.1",
     "moment": "2.29.0"
   }
 }
