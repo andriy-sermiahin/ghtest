@@ -53,9 +53,10 @@ jobs:
           git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
           git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
           git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
+          git remote -v
 
-      - run: |
-          gh pr create --base main --title "Deps: moment upgrade to v$PACKAGE_INFO_VERSION" --body "moment has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+      # - run: |
+      #     gh pr create --base main --title "Deps: moment upgrade to v$PACKAGE_INFO_VERSION" --body "moment has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
         
 
       
