@@ -54,11 +54,12 @@ jobs:
           git config --global github.token $GH_TOKEN
           # echo "GH_TOKEN=$(echo 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)" >> $GITHUB_ENV
           # GH_TOKEN=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
-          git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
-          git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
-          git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
+          # git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
+          # git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+          # git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
           git remote -v
-          gh pr create --base main --title "Deps: moment upgrade to v$PACKAGE_INFO_VERSION" --body "moment has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+          gh auth status
+          # gh pr create --base main --title "Deps: moment upgrade to v$PACKAGE_INFO_VERSION" --body "moment has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
 
       # - run: |
       #     gh pr create --base main --title "Deps: moment upgrade to v$PACKAGE_INFO_VERSION" --body "moment has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
