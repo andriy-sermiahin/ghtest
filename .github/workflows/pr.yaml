@@ -26,15 +26,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: git status
-
       - run: |
           PACKAGE_INFO_VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
           echo $PACKAGE_INFO_VERSION
           echo "::set-output name=PACKAGE_INFO_VERSION::$PACKAGE_INFO_VERSION"
+          echo ${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
 
       - name: Upgrading moment
-        run: yarn upgrade moment@${{needs.job1.outputs.PACKAGE_INFO_VERSION}}
+        run: yarn upgrade moment@${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
         # with:
         #   PACKAGE_INFO_VERSION: ${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
 
