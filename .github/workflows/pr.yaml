@@ -22,16 +22,18 @@ jobs:
 
       - run: |
           PACKAGE_INFO_VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
-          echo $PACKAGE_INFO_VERSION
+          echo $PACKAGE_INFO_VERSION && echo ::set-output name=PACKAGE_INFO_VERSION::"$PACKAGE_INFO_VERSION"
 
       - name: Upgrading moment
-        run: yarn upgrade moment@$PACKAGE_INFO_VERSION
+        run: yarn upgrade moment@${{ steps.vars.outputs.PACKAGE_INFO_VERSION }}
 
       - name: Get diff
-        run: git diff --name-only --exit-code package.json | grep "eslint"
+        run: |
+            git diff --name-only --exit-code package.json | grep "moment"
+            IS_UPDATED=$?
+            echo "IS_UPDATED = $IS_UPDATED" && echo ::set-output name=IS_UPDATED::"$IS_UPDATED"
 
-      - run: IS_UPDATED=$?
 
-      - run: echo "IS_UPDATED = $IS_UPDATED"
+      - run: echo ${{ steps.vars.outputs.IS_UPDATED }}
 
       
