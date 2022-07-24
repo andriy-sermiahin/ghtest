@@ -53,17 +53,13 @@ jobs:
           git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global github.token $GH_TOKEN
-          # echo "GH_TOKEN=$(echo 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)" >> $GITHUB_ENV
-          # GH_TOKEN=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
-          # git checkout -b "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
-          # git add . && git commit -m "Upgrade ${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
-          # git push origin "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
-          git remote -v
-          gh pr diff
+          git checkout -b "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
+          git add . && git commit -m "Upgrade ${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+          git push origin "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
           # gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
 
-      # - run: |
-      #     gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+      - run: |
+          gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
         
 
       
