@@ -1,6 +1,8 @@
-name: Node CI environment
+name: Shelf packages upgrade
 
-on: [push]
+on:
+  schedule:
+    - cron: '0 12 * * SUN'
 
 jobs:
   update-deps:
@@ -10,14 +12,11 @@ jobs:
         shell: bash
 
     env:
-      GH_TOKEN: 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
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     strategy:
       matrix:
-        package: [moment, dotenv]
-
-    outputs:
-      PACKAGE_INFO_VERSION: ${{ steps.step3.outputs.PACKAGE_INFO_VERSION }}
+        package: [announcements-ddb, auth-tokens-ddb, aws-sdk-helpers, feedback-ddb, mongo, sdk]
 
     steps:
       - uses: actions/checkout@v3
@@ -29,36 +28,37 @@ jobs:
         with:
           node-version: 16
 
-      - run: |
-          PREV_VERSION=$(jq '.dependencies | to_entries | map(select(.key == "${{ matrix.package }}")) | .[0].value' package.json | tr -d '"')
-          echo $PREV_VERSION
-          echo "PREV_VERSION=$(echo $PREV_VERSION)" >> $GITHUB_ENV
+      - name: Getting current package version from package.json
+        run: |
+          CURRENT_VERSION=$(jq '.dependencies | to_entries | map(select(.key == "@shelf/${{ matrix.package }}")) | .[0].value' package.json | tr -d '"')
+          echo $CURRENT_VERSION
+          echo "CURRENT_VERSION=$(echo $CURRENT_VERSION)" >> $GITHUB_ENV
 
-      - run: |
-          VERSION=$(yarn info ${{ matrix.package }} | grep "version:" | cut -d \' -f2)
+      - name: Getting latest package version
+        run: |
+          VERSION=$(yarn info @shelf/${{ matrix.package }} | grep "version:" | cut -d \' -f2)
           echo $VERSION
           echo "PACKAGE_INFO_VERSION=$(echo $VERSION)" >> $GITHUB_ENV
 
       - name: Upgrading package
-        run: yarn upgrade ${{ matrix.package }}@$PACKAGE_INFO_VERSION
+        run: yarn upgrade @shelf/${{ matrix.package }}@$PACKAGE_INFO_VERSION
 
       - name: Get diff
         run: |
             git diff --name-only --exit-code package.json || echo "IS_UPDATED=$(echo $?)" >> $GITHUB_ENV && exit 0
 
       - if: env.IS_UPDATED == 1
+        name: Pushing changes to origin in separate branch
         run: |
           git config --global user.name "AndriiSermiahin"
           git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global github.token $GH_TOKEN
           git checkout -b "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
-          git add . && git commit -m "Upgrade ${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+          git add . && git commit -m "Upgrade @shelf/${{ matrix.package }} from v$CURRENT_VERSION to v$PACKAGE_INFO_VERSION"
           git push origin "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
 
       - if: env.IS_UPDATED == 1
+        name: Creating a Pull Request
         run: |
-          gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
-        
-
-      
+          gh pr create --base main --title "Deps: @shelf/${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "@shelf/${{ matrix.package }} has been upgraded from v$CURRENT_VERSION to v$PACKAGE_INFO_VERSION"
