@@ -59,8 +59,8 @@ jobs:
           # git add . && git commit -m "Upgrade ${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
           # git push origin "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
           git remote -v
-          gh pr diff
           ls -la
+          pwd
           # gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
 
       # - run: |
