@@ -10,7 +10,7 @@ jobs:
         shell: bash
 
     env:
-      GH_TOKEN: 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
+      GH_TOKEN: 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
 
     strategy:
       matrix:
@@ -59,9 +59,7 @@ jobs:
           # git add . && git commit -m "Upgrade ${{ matrix.package }} from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
           # git push origin "${{ matrix.package }}-v$PACKAGE_INFO_VERSION-upgrade"
           git remote -v
-          ls -la
-          pwd
-          cat .git
+          gh pr diff
           # gh pr create --base main --title "Deps: ${{ matrix.package }} upgrade to v$PACKAGE_INFO_VERSION" --body "${{ matrix.package }} has been upgraded from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
 
       # - run: |
