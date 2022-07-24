@@ -36,9 +36,8 @@ jobs:
 
       - name: Get diff
         run: |
-            git diff --name-only --exit-code package.json
-            echo "IS_UPDATED=$(echo $?)" >> $GITHUB_ENV
-        continue-on-error: true
+            git diff --name-only --exit-code package.json && echo "IS_UPDATED=$(echo $?)" >> $GITHUB_ENV && exit 0
+            # echo "IS_UPDATED=$(echo $?)" >> $GITHUB_ENV
 
       - run: echo $IS_UPDATED
 
