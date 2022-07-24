@@ -29,12 +29,10 @@ jobs:
       - run: |
           VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
           echo $VERSION
-          echo "PACKAGE_INFO_VERSION=$PACKAGE_INFO_VERSION" >> $GITHUB_ENV
+          echo "PACKAGE_INFO_VERSION=$(echo $VERSION)" >> $GITHUB_ENV
 
       - name: Upgrading moment
         run: yarn upgrade moment@$PACKAGE_INFO_VERSION
-        with:
-          PACKAGE_INFO_VERSION: 1
 
       - name: Get diff
         run: git diff --name-only --exit-code package.json
