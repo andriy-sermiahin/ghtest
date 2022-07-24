@@ -27,6 +27,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: |
+          PREV_VERSION=jq '.dependencies | to_entries | map(select(.key == "moment")) | .[0].value' package.json | tr -d '"'
+          echo $PREV_VERSION
+          echo "PREV_VERSION=$(echo $PREV_VERSION)" >> $GITHUB_ENV
+
+      - run: |
           VERSION=$(yarn info moment | grep "version:" | cut -d \' -f2)
           echo $VERSION
           echo "PACKAGE_INFO_VERSION=$(echo $VERSION)" >> $GITHUB_ENV
@@ -37,9 +42,10 @@ jobs:
       - name: Get diff
         run: |
             git diff --name-only --exit-code package.json || echo "IS_UPDATED=$(echo $?)" >> $GITHUB_ENV && exit 0
-            # echo "IS_UPDATED=$(echo $?)" >> $GITHUB_ENV
 
-      - run: echo $IS_UPDATED
-        # if: ${{ failure() }}
+      - run: |
+          git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
+          git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
+          git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
 
       
