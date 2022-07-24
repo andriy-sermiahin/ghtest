@@ -34,7 +34,7 @@ jobs:
       - name: Upgrading moment
         run: yarn upgrade moment@$PACKAGE_INFO_VERSION
         with:
-          PACKAGE_INFO_VERSION: "${{ env.PACKAGE_INFO_VERSION }}"
+          PACKAGE_INFO_VERSION: 1
 
       - name: Get diff
         run: git diff --name-only --exit-code package.json
