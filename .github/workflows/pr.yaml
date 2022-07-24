@@ -9,6 +9,9 @@ jobs:
       run:
         shell: bash
 
+    env:
+      GH_TOKEN: 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
+
     strategy:
       matrix:
         node-version: [14.x]
@@ -48,9 +51,9 @@ jobs:
           git config --global user.name "AndriiSermiahin"
           git config --global user.email "andrey.sermiahin@gmail.com"
           git config --global user.email "andrey.sermiahin@gmail.com"
-          git config --global github.token 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
+          git config --global github.token $GH_TOKEN
           # echo "GH_TOKEN=$(echo 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)" >> $GITHUB_ENV
-          GH_TOKEN=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
+          # GH_TOKEN=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
           git checkout -b "moment-v$PACKAGE_INFO_VERSION-upgrade"
           git add . && git commit -m "moment from v$PREV_VERSION to v$PACKAGE_INFO_VERSION"
           git push origin "moment-v$PACKAGE_INFO_VERSION-upgrade"
